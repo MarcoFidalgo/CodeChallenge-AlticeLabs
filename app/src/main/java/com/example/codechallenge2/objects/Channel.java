@@ -6,9 +6,7 @@ import java.util.List;
 
 public class Channel {
 
-    //TODO: TESTING
     @SerializedName("data") private List<Channel> channels;
-
 
     @SerializedName("Title")
     private String name;
@@ -16,19 +14,14 @@ public class Channel {
     @SerializedName("CallLetter")
     private String callLetter;
 
-
-
     private String currentShow;
     private String nextShow;
-    //add image later??
 
-
-    //Used when loading list of channels
+    /** Used when loading list of channels */
     public Channel(String name, String callLetter) {
         this.name = name;
         this.callLetter = callLetter;
     }
-
 
 
     //Getters & Setters

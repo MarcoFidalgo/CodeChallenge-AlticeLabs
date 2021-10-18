@@ -31,8 +31,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>{
+
     private static final String BASE_URL = "https://ott.online.meo.pt/Program/v9/Programs/NowAndNextLiveChannelPrograms?" +
             "UserAgent=AND&$filter=CallLetter%20eq%20%27CHANNEL_NAME%27&$orderby=StartDate%20asc";
+
     private static final String BASE_URL_THUMBNAIL = "http://cdn-images.online.meo.pt/eemstb/ImageHandler.ashx?evTitle=CHANNEL_TITLE&chCallLetter=CALL_LETTER&profile=16_9&width=320";
 
     private ArrayList<Channel> channelList;
@@ -53,8 +55,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             tvCurrentShow = view.findViewById(R.id.tvCurrentShow);
             tvNextShow = view.findViewById(R.id.tvNextShow);
             ivThumbnail = view.findViewById(R.id.ivThumbnail);
-
-
         }
     }
 
@@ -63,9 +63,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public RecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Inflates the View
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-
-
-
         return new MyViewHolder(itemView);
     }
 
@@ -76,9 +73,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
-
-
-
         String name = channelList.get(position).getName(),
                 currentShow = channelList.get(position).getCurrentShow(),
                 nextShow = channelList.get(position).getNextShow();
@@ -86,16 +80,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         holder.tvCurrentShow.setText(currentShow);
         holder.tvNextShow.setText(nextShow);
 
-
-
         //Fills visible channels Now&Next info
         getChannelInfo(channelList.get(position).getCallLetter(), position, holder);
-
-
     }
 
 
-
+    /** Adds changes to the channel list comparing one to another */
     public void updateChannelListItems(List<Channel> channels) {
         final ChannelsDiffCallback diffCallback = new ChannelsDiffCallback(this.channelList, channels);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
@@ -105,10 +95,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         diffResult.dispatchUpdatesTo(this);
     }
 
-    /** */
+    /** Gets the Now&Next / thumbnail info */
     private void getChannelInfo(String callLetter, int position, @NonNull RecyclerAdapter.MyViewHolder holder) {
         String baseUrl = BASE_URL;
-
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://ott.online.meo.pt/")
@@ -150,21 +139,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     }
 
-    /** Downloads the thumbnail of current shows using Picasso library*/
+    /** Downloads the thumbnail of current shows using Picasso library */
     private void loadThumbnail(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
         String imageUrl = BASE_URL_THUMBNAIL;
-        //if(channelList.get(position).getCurrentShow() != null) {
+
         imageUrl = imageUrl.replace("CHANNEL_TITLE", channelList.get(position).getCurrentShow());
         imageUrl = imageUrl.replace("CALL_LETTER", channelList.get(position).getCallLetter());
-        //}
+
         Picasso.get().load(imageUrl)
                 .error(R.drawable.loading_error)
                 .placeholder(R.drawable.loading)
                 .into(holder.ivThumbnail, new com.squareup.picasso.Callback() {
                     @Override
-                    public void onSuccess() {
-
-                    }
+                    public void onSuccess() {}
 
                     @Override
                     public void onError(Exception e) {}

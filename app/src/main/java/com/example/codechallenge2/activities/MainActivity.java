@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerAdapter adapter;
     private ProgressBar progressBar;
 
+    private RecyclerView.LayoutManager layoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +54,10 @@ public class MainActivity extends AppCompatActivity {
     private void setAdapter() {
 
         //creates the adapter for the RecyclerView
-        //adapter = new RecyclerAdapter(new ArrayList<Channel>(listOfAllChannels.getChannels()));
         adapter = new RecyclerAdapter(new ArrayList<Channel>());
 
         //creates the layout manager(measures and position item views within the RecyclerView)
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);

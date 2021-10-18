@@ -13,8 +13,7 @@ public class ChannelList {
     @SerializedName("odata.nextLink")
     private String nextLink;
 
-
-    //Add multiple channels to the list
+    /** Add multiple channels to the list */
     public void addChannels(List c) {
         channels.addAll(c);
     }

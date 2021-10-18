@@ -29,7 +29,6 @@ public class ChannelsDiffCallback extends DiffUtil.Callback{
         return mNewChannelList.size();
     }
 
-
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
         return mOldChannelList.get(oldItemPosition).getCallLetter() == mNewChannelList.get(newItemPosition).getCallLetter();
@@ -39,8 +38,6 @@ public class ChannelsDiffCallback extends DiffUtil.Callback{
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         final Channel oldChannel = mOldChannelList.get(oldItemPosition);
         final Channel newChannel = mNewChannelList.get(newItemPosition);
-
-
 
         if(TextUtils.equals(oldChannel.getCallLetter(),newChannel.getCallLetter())
             && TextUtils.equals(oldChannel.getName(),newChannel.getName())
