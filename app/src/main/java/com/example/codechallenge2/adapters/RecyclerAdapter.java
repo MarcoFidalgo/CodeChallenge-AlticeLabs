@@ -4,7 +4,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,6 +53,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             tvCurrentShow = view.findViewById(R.id.tvCurrentShow);
             tvNextShow = view.findViewById(R.id.tvNextShow);
             ivThumbnail = view.findViewById(R.id.ivThumbnail);
+
+
         }
     }
 
@@ -58,6 +63,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public RecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Inflates the View
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+
+
+
         return new MyViewHolder(itemView);
     }
 
@@ -68,12 +76,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
+
+
+
         String name = channelList.get(position).getName(),
                 currentShow = channelList.get(position).getCurrentShow(),
                 nextShow = channelList.get(position).getNextShow();
         holder.tvName.setText(name);
         holder.tvCurrentShow.setText(currentShow);
         holder.tvNextShow.setText(nextShow);
+
+
 
         //Fills visible channels Now&Next info
         getChannelInfo(channelList.get(position).getCallLetter(), position, holder);
@@ -109,7 +122,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             public void onResponse(Call<ChannelList> call, Response<ChannelList> response) {
 
                 if (!response.isSuccessful()) {
-                    Log.i("actDebug", "Code: " + response.code());
                     return;
                 }
 
@@ -122,6 +134,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
                 //Draws show's thumbnails
                 loadThumbnail(holder, position);
+
+                //Animations for long texts
+                if(channelList.get(position).getCurrentShow() != null && channelList.get(position).getCurrentShow().length() > 20)
+                    holder.tvCurrentShow.startAnimation((Animation) AnimationUtils.loadAnimation(holder.tvCurrentShow.getContext(), R.anim.scroll_animation));
+                if(channelList.get(position).getNextShow() != null && channelList.get(position).getNextShow().length() > 20)
+                    holder.tvNextShow.startAnimation((Animation) AnimationUtils.loadAnimation(holder.tvNextShow.getContext(), R.anim.scroll_animation));
             }
 
             @Override

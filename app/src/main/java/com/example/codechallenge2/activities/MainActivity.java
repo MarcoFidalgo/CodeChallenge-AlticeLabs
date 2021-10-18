@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.codechallenge2.R;
 import com.example.codechallenge2.adapters.DiffUtils.ChannelsDiffCallback;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ChannelList listOfAllChannels;
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listOfAllChannels = new ChannelList();
+        progressBar = findViewById(R.id.progressBar);
+
         //Loop: Iterate through all "nextLink" channel pages
         getChannelList(BASE_URL_CHANNEL_LIST);
     }
@@ -80,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
                     //Exit condition
                     if(response.body().getNextLink() == null){
-                        Log.i("actDebug", "Size of channel list: "+listOfAllChannels.getChannels().size());
-
                         return;
                     }
 
@@ -89,10 +92,13 @@ public class MainActivity extends AppCompatActivity {
                     if(url.equals(BASE_URL_CHANNEL_LIST)){
                         recyclerView = findViewById(R.id.recyclerView);
                         setAdapter();
+
+                        //Visibility
+                        recyclerView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);;
                     }
 
                     nextLink = (response.body().getNextLink() ).replace("http","https");
-                    Log.i("actDebug", "Response: " + response);
 
                     adapter.updateChannelListItems(listOfAllChannels.getChannels());
                     getChannelList(nextLink);
