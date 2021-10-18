@@ -12,7 +12,10 @@ import retrofit2.http.Url;
 
 public interface MeoJsonApi {
 
-    @GET()
+    @GET
     Call<ChannelList> getChannels(@Url String url, @Query("value") Channel a, @Query("odata.nextLink") String link);
+
+    @GET
+    Call<ChannelList> getChannelInfo(@Url String url, @Query("value") Channel a);
 
 }

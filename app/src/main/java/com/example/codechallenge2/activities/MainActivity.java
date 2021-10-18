@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.codechallenge2.R;
+import com.example.codechallenge2.adapters.DiffUtils.ChannelsDiffCallback;
 import com.example.codechallenge2.adapters.RecyclerAdapter;
 import com.example.codechallenge2.interfaces.MeoJsonApi;
 import com.example.codechallenge2.objects.Channel;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private String nextLink = "";
     private ChannelList listOfAllChannels;
     private RecyclerView recyclerView;
+    private RecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +41,13 @@ public class MainActivity extends AppCompatActivity {
         listOfAllChannels = new ChannelList();
         //Loop: Iterate through all "nextLink" channel pages
         getChannelList(BASE_URL_CHANNEL_LIST);
-
-
     }
 
     private void setAdapter() {
 
         //creates the adapter for the RecyclerView
-        RecyclerAdapter adapter = new RecyclerAdapter(new ArrayList<Channel>(listOfAllChannels.getChannels()));
+        //adapter = new RecyclerAdapter(new ArrayList<Channel>(listOfAllChannels.getChannels()));
+        adapter = new RecyclerAdapter(new ArrayList<Channel>());
 
         //creates the layout manager(measures and position item views within the RecyclerView)
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -79,17 +80,21 @@ public class MainActivity extends AppCompatActivity {
 
                     //Exit condition
                     if(response.body().getNextLink() == null){
+                        Log.i("actDebug", "Size of channel list: "+listOfAllChannels.getChannels().size());
 
-                        //Finally sets the adapter of the recycler view
+                        return;
+                    }
+
+                    //Fills the recycler view with the first page of Channels (Sets the adapter)
+                    if(url.equals(BASE_URL_CHANNEL_LIST)){
                         recyclerView = findViewById(R.id.recyclerView);
                         setAdapter();
-                        Log.i("actDebug", "ok");
-                        return;
                     }
 
                     nextLink = (response.body().getNextLink() ).replace("http","https");
                     Log.i("actDebug", "Response: " + response);
 
+                    adapter.updateChannelListItems(listOfAllChannels.getChannels());
                     getChannelList(nextLink);
                 }
 
